@@ -56,7 +56,7 @@ class Wpcf7_to_Dolibarr_Plugin  {
         // Setup options for each Contact Form 7 form
         //add_action( 'wpcf7_admin_after_form', array( &$this, 'setup_form_options' ) );
         add_action( 'wpcf7_after_save', array( &$this, 'save_form' ) );
-        add_action("wpcf7_before_send_mail", array(&$this, "sync_into_dolibarr") );
+        add_action( "wpcf7_before_send_mail", array(&$this, "sync_into_dolibarr") );
         add_filter( 'wpcf7_editor_panels' , array(&$this, 'new_panel'));
         
         add_action( 'admin_init', array( &$this, 'setup_admin_init' ) );
