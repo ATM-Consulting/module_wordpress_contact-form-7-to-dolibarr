@@ -70,6 +70,15 @@
 		</td>
 	</tr>
 	
+	<tr>
+		<th scope="row">
+		  	<label for="wpcf7-dolibarr-field-phone">Tag for phone:</label>
+		</th>
+		<td>
+		  	<input type="text" id="wpcf7-dolibarr-field-phone" name="wpcf7-dolibarr[field_phone]" class="wide" size="70" value="<?php echo $data['field_phone']; ?>">
+		</td>
+	</tr>
+	
 	
 	</tbody>
 </table>

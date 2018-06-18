@@ -43,7 +43,7 @@ class Wpcf7_dolibarr_sync
 		));
 
 		$this->setCompany($datas['field_company'], $datas['field_email']);
-		$this->setContact($datas['field_lastname'], $datas['field_firstname'], $datas['field_email']);
+		$this->setContact($datas['field_lastname'], $datas['field_firstname'], $datas['field_email'], $datas['field_phone']);
 		$this->setMessage($datas['message']);
 		$this->setMessageSubject($datas['subject']);
 
@@ -54,6 +54,16 @@ class Wpcf7_dolibarr_sync
 	private function setCompany($name, $email) {
 		$this->company['name'] = $name;
 		$this->company['email'] = $email;
+		$this->company['provenance'] = 'INT';
+
+		// Retreive FR country
+		$result = $this->api->get('setup/dictionary/countries', array('sqlfilters' => "code = 'FR'"));
+		if ($result->info->http_code == 200) {	// We found
+			$resArray = $result->decode_response();
+			$firstKey = key($resArray);
+			$country = $resArray[$firstKey];
+		}
+		$this->company['country_id'] = empty($country->id) ? 0 : $country->id;
 	}
 
 	public function setCompanyId($id) {
@@ -64,10 +74,11 @@ class Wpcf7_dolibarr_sync
 		$this->contact['id'] = $id;
 	}
 
-	private function setContact($lastname, $firstname, $email) {
+	private function setContact($lastname, $firstname, $email, $phone) {
 		$this->contact['lastname'] = $lastname;
 		$this->contact['firstname'] = $firstname;
 		$this->contact['email'] = $email;
+		$this->contact['phone'] = $phone;
 		$this->contact['socid'] = $this->company['id'];
 	}
 
@@ -115,7 +126,9 @@ class Wpcf7_dolibarr_sync
 		// Informations about company to create
 		$datas = array(
 			'name' => $this->company['name'],
-			'email' => $this->company['email']
+			'email' => $this->company['email'],
+			'country_id' => $this->company['country_id'],
+			'array_options' => array('options_provenance' => $this->company['provenance'])
 		);
 		$result = $this->api->post("thirdparties", $datas);
 
@@ -152,6 +165,7 @@ class Wpcf7_dolibarr_sync
 			'lastname' => $this->contact['lastname'],
 			'firsname' => $this->contact['firstname'],
 			'email' => $this->contact['email'],
+			'phone_pro' => $this->contact['phone'],
 			'socid' => $this->company['id']
 		);
 		$result = $this->api->post("contacts", $datas);

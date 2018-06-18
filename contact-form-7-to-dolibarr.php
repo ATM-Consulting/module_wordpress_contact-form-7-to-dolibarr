@@ -312,7 +312,7 @@ class Wpcf7_to_Dolibarr_Plugin
 	 * @author jfefe
 	 */
 	public function save_form($form) {
-		update_option('wpcf7_dolibarr_'.(method_exists($form, 'id') ? $form->id() : $form->id), $_POST['wpcf7-dolibarr']);
+		update_option('wpcf7_dolibarr_'.$form->id, $_POST['wpcf7-dolibarr']);
 	}
 
 	/**
@@ -323,14 +323,15 @@ class Wpcf7_to_Dolibarr_Plugin
 	 */
 	public function sync_into_dolibarr($form) {
 		$companyId = 0;
-		$options = array_merge(get_option('wpcf7_dolibarr_options'), get_option('wpcf7_dolibarr_'.(method_exists($form, 'id') ? $form->id() : $form->id)));
-		$properties = $form->get_properties();
 
+		$options = array_merge(get_option('wpcf7_dolibarr_options'), get_option('wpcf7_dolibarr_'.$form->id));
+		$properties = $form->get_properties();
 		// Replace tags
 		$options['field_company'] = wpcf7_mail_replace_tags($options['field_company'], array());
 		$options['field_firstname'] = wpcf7_mail_replace_tags($options['field_firstname'], array());
 		$options['field_lastname'] = wpcf7_mail_replace_tags($options['field_lastname'], array());
 		$options['field_email'] = wpcf7_mail_replace_tags($options['field_email'], array());
+		$options['field_phone'] = wpcf7_mail_replace_tags($options['field_phone'], array());
 		$options['subject'] = wpcf7_mail_replace_tags($properties['mail']['subject'], array());
 		$options['message'] = wpcf7_mail_replace_tags($properties['mail']['body'], array());
 
