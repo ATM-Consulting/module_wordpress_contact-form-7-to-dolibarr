@@ -42,7 +42,7 @@ class Wpcf7_dolibarr_sync
 			'headers' => ['DOLAPIKEY' => $datas['api_key']]
 		));
 
-		$this->setCompany($datas['field_company'], $datas['field_email']);
+		$this->setCompany($datas['field_company']);
 		$this->setContact($datas['field_lastname'], $datas['field_firstname'], $datas['field_email'], $datas['field_phone']);
 		$this->setMessage($datas['message']);
 		$this->setMessageSubject($datas['subject']);
@@ -51,17 +51,25 @@ class Wpcf7_dolibarr_sync
 		$this->ownerId = $datas['userownerid'];
 	}
 
-	private function setCompany($name, $email) {
+	private function setCompany($name) {
 		$this->company['name'] = $name;
-		$this->company['email'] = $email;
 		$this->company['provenance'] = 'INT';
 
-		// Retreive FR country
+		// Retreive FR country : Only work with DOL_VERSION >= 7.0
 		$result = $this->api->get('setup/dictionary/countries', array('sqlfilters' => "code = 'FR'"));
 		if ($result->info->http_code == 200) {	// We found
 			$resArray = $result->decode_response();
 			$firstKey = key($resArray);
 			$country = $resArray[$firstKey];
+		}
+		else if($result->info->http_code == 501) {
+			// Only work with DOL_VERSION <= 6.0
+			$result = $this->api->get('dictionarycountries', array('sqlfilters' => "code = 'FR'"));
+			if($result->info->http_code == 200) {
+				$resArray = $result->decode_response();
+				$firstKey = key($resArray);
+				$country = $resArray[$firstKey];
+			}
 		}
 		$this->company['country_id'] = empty($country->id) ? 0 : $country->id;
 	}
@@ -163,7 +171,7 @@ class Wpcf7_dolibarr_sync
 		// Information about contact to create
 		$datas = array(
 			'lastname' => $this->contact['lastname'],
-			'firsname' => $this->contact['firstname'],
+			'firstname' => $this->contact['firstname'],
 			'email' => $this->contact['email'],
 			'phone_pro' => $this->contact['phone'],
 			'socid' => $this->company['id']
