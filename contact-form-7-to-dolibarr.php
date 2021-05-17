@@ -22,7 +22,7 @@
   Version: 1.0
  */
 
-define('WPCF7_DOLIBARR_VERSION', '4.3.1');
+define('WPCF7_DOLIBARR_VERSION', '4.3.2');
 
 
 define('WPCF7_DOLIBARR_PLUGIN', __FILE__);
