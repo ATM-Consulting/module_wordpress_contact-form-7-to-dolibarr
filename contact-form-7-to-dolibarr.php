@@ -19,7 +19,7 @@
   Plugin URI: https://github.com/ATM-Consulting/module_wordpress_contact-form-7-to-dolibarr
   Description: Addon for WordPress Contact Form
   Author: Jean-François Ferry <jfefe@aternatik.fr>
-  Version: 1.0
+  Version: 1.0.1
  */
 
 define('WPCF7_DOLIBARR_VERSION', '4.3.2');
