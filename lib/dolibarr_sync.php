@@ -62,7 +62,7 @@ class Wpcf7_dolibarr_sync
 		$this->company['provenance'] = 'INT';
 
 		// Retreive FR country : Only work with DOL_VERSION >= 7.0
-		$result = $this->api->get('setup/dictionary/countries', array(), array('sqlfilters' => "code = 'FR'"));
+		$result = $this->api->get('setup/dictionary/countries', array('sqlfilters' => "code = 'FR'"));
 		if ($result->info->http_code == 200) {	// We found
 			$resArray = $result->decode_response();
 			$firstKey = key($resArray);
@@ -70,7 +70,7 @@ class Wpcf7_dolibarr_sync
 		}
 		else if($result->info->http_code == 501) {
 			// Only work with DOL_VERSION <= 6.0
-			$result = $this->api->get('dictionarycountries', array(), array('sqlfilters' => "code = 'FR'"));
+			$result = $this->api->get('dictionarycountries', array('sqlfilters' => "code = 'FR'"));
 			if($result->info->http_code == 200) {
 				$resArray = $result->decode_response();
 				$firstKey = key($resArray);
@@ -118,7 +118,7 @@ class Wpcf7_dolibarr_sync
 	 */
 	public function searchCompany($email) {
 		$return = -1;
-		$result = $this->api->get("thirdparties", array(), ['sqlfilters' => "(t.email:LIKE:'".$email."')"]);
+		$result = $this->api->get("thirdparties", ['sqlfilters' => "(t.email:LIKE:'".$email."')"]);
 		// Au moins un résultat trouvé
 		if ($result->info->http_code == 200) {
 			$resArray = $result->decode_response();
