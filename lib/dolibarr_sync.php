@@ -42,7 +42,7 @@ class Wpcf7_dolibarr_sync
 			'headers' => ['DOLAPIKEY' => $datas['api_key']]
 		));
 
-		$this->setCompany($datas['field_company'], $datas['field_email']);
+		$this->setCompany($datas['field_company'], $datas['field_email'], $datas['field_siren']);
 		$this->setContact($datas['field_lastname'], $datas['field_firstname'], $datas['field_email'], $datas['field_phone']);
 		$this->setMessage($datas['message']);
 		$this->setMessageSubject($datas['subject']);
@@ -56,9 +56,10 @@ class Wpcf7_dolibarr_sync
 	 * @param string $email
 	 * @throws RestClientException
 	 */
-	private function setCompany($name, $email) {
+	private function setCompany($name, $email, $siren) {
 		$this->company['name'] = $name;
 		$this->company['email'] = $email;
+        $this->company['siren'] = $siren;
 		$this->company['provenance'] = 'INT';
 
 		// Retreive FR country : Only work with DOL_VERSION >= 7.0
@@ -147,6 +148,7 @@ class Wpcf7_dolibarr_sync
 		$datas = array(
 			'name' => $this->company['name'],
 			'email' => $this->company['email'],
+            'idprof1' => $this->company['siren'],
 			'country_id' => $this->company['country_id'],
 			'array_options' => array('options_provenance' => $this->company['provenance'])
 		);

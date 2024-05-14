@@ -237,6 +237,7 @@ class Wpcf7_to_Dolibarr_Plugin
 					'api_key' => '',
 					'category_id' => '',
 					'field_company' => '',
+                    'field_siren' => '',
 					'field_email' => '',
 					'field_lastname' => '',
 					'field_firstname' => '',
@@ -328,6 +329,7 @@ class Wpcf7_to_Dolibarr_Plugin
 		$properties = $form->get_properties();
 		// Replace tags
 		$options['field_company'] = wpcf7_mail_replace_tags($options['field_company'], array());
+        $options['field_siren'] = wpcf7_mail_replace_tags($options['field_siren'], array());
 		$options['field_firstname'] = wpcf7_mail_replace_tags($options['field_firstname'], array());
 		$options['field_lastname'] = wpcf7_mail_replace_tags($options['field_lastname'], array());
 		$options['field_email'] = wpcf7_mail_replace_tags($options['field_email'], array());
