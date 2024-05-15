@@ -150,7 +150,9 @@ class Wpcf7_dolibarr_sync
 			'email' => $this->company['email'],
             'idprof1' => $this->company['siren'],
 			'country_id' => !empty($this->company['siren']) ? 1 : $this->company['country_id'], // Force country to France if SIREN is set
-			'array_options' => array('options_provenance' => $this->company['provenance'])
+			'array_options' => array('options_provenance' => $this->company['provenance']),
+            'client'    => 2, // Set as Prospect,
+            'code_client' => 'auto'
 		);
 		$result = $this->api->post("thirdparties", $datas);
 
