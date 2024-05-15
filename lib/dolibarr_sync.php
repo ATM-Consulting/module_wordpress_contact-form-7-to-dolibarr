@@ -136,7 +136,19 @@ class Wpcf7_dolibarr_sync
 	}
 
 	public function searchContact($email) {
-		
+		$result = $this->api->get("contacts", ['sqlfilters' => "(t.email:LIKE:'".$email."')"]);
+        if ($result->info->http_code == 200) {
+            $resArray = $result->decode_response();
+            if (!empty($resArray[0])) {
+                return $resArray[0]->fk_soc;
+            }
+            return 0;
+        }
+
+        if ($result->info->http_code === 404) {
+            return 0;
+        }
+        return -1;
 	}
 
 	/**
