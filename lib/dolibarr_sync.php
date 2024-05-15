@@ -216,7 +216,8 @@ class Wpcf7_dolibarr_sync
 			'userownerid' => $this->ownerId,
 			'socid' => $this->company['id'],
 			'contactid' => $this->contact['id'],
-			'note' => $this->message
+			'note' => $this->message,
+            'percentage' => 100
 		);
 		$result = $this->api->post("agendaevents", $datas);
 
