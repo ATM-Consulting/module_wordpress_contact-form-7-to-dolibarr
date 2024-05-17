@@ -154,11 +154,23 @@ class RestClient implements Iterator, ArrayAccess
 			$parameters = array_merge($client->options['parameters'], $parameters);
 			$parameters_string = http_build_query($parameters);
 
-			// http_build_query automatically adds an array index to repeated
-			// parameters which is not desirable on most systems. This hack
-			// reverts "key[0]=foo&key[1]=bar" to "key[]=foo&key[]=bar"
-			if (!$client->options['build_indexed_queries'])
-				$parameters_string = preg_replace("/%5B[0-9]+%5D=/simU", "%5B%5D=", $parameters_string);
+			if (!$client->options['build_indexed_queries']) {
+                // function array_is_list is implemented with PHP 8.1 --> we rewrite it for retro compatibility
+                if (!function_exists('array_is_list')) {
+                    function array_is_list(array $array): bool {
+                        if ($array === []) return true;
+                        return array_keys($array) === range(0, count($array) - 1);
+                    }
+                }
+
+                // Do not escape array index if the given parameters array is a real associated array
+                if (array_is_list($parameters)) {
+                    // http_build_query automatically adds an array index to repeated
+                    // parameters which is not desirable on most systems. This hack
+                    // reverts "key[0]=foo&key[1]=bar" to "key[]=foo&key[]=bar"
+                    $parameters_string = preg_replace("/%5B[0-9]+%5D=/simU", "%5B%5D=", $parameters_string);
+                }
+            }
 		}
 		else
 			$parameters_string = (string) $parameters;

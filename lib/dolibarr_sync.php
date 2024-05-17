@@ -228,6 +228,7 @@ class Wpcf7_dolibarr_sync
 			'userownerid' => $this->ownerId,
 			'socid' => $this->company['id'],
 			'contactid' => $this->contact['id'],
+			'socpeopleassigned' => [$this->contact['id'] => $this->contact['id']],
 			'note' => $this->message,
             'percentage' => 100
 		);
