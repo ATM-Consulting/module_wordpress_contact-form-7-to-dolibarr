@@ -135,6 +135,12 @@ class Wpcf7_dolibarr_sync
 		return $return;
 	}
 
+    /**
+     * Get a society ID with the user email
+     * @param string $email
+     * @return int < 0 if Ko, 0 if no one found, > 0 ID of the society of the found user
+     * @throws RestClientException
+     */
 	public function searchContact($email) {
 		$result = $this->api->get("contacts", ['sqlfilters' => "(t.email:LIKE:'".$email."')"]);
         if ($result->info->http_code == 200) {
