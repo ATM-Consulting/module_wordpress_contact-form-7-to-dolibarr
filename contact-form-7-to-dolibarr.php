@@ -339,9 +339,9 @@ class Wpcf7_to_Dolibarr_Plugin
 
 		$dolibarrSync = new Wpcf7_dolibarr_sync($options);
 
-        $searchContact = $dolibarrSync->searchContact($options['field_email']);
+        $societyIdFromContactEmail = $dolibarrSync->getSocietyIdFromContactEmail($options['field_email']);
 
-        $searchCompany = $searchContact ?: $dolibarrSync->searchCompany($options['field_email']);
+        $searchCompany = $societyIdFromContactEmail ?: $dolibarrSync->searchCompany($options['field_email']);
 
 		// Company not found
 		if ($searchCompany === 0) {
