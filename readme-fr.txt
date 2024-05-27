@@ -15,6 +15,7 @@ Un lien est présent dans le menu principal pour définir les options par défau
   - clé API (rempli avec les valeurs par défaut)
   - ID de la catégorie à laquelle lier les tiers crées par le plugin
   - Nom du tag formulaire pour le champ 'societe' (nom du tiers)
+  - Nom du tag formulaire pour le champ 'siren'
   - Nom du tag formulaire pour le champ 'email'
   - Nom du tag formulaire pour le champ 'lastname' (nom du contact)
   - Nom du tag formulaire pour le champ 'fistname' (prénom du contact)

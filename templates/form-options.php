@@ -42,6 +42,15 @@
 		  	<input type="text" id="wpcf7-dolibarr-field-company" name="wpcf7-dolibarr[field_company]" class="wide" size="70" value="<?php echo $data['field_company']; ?>">
 		</td>
 	</tr>
+
+    <tr>
+        <th scope="row">
+            <label for="wpcf7-dolibarr-field-siren">Tag for siren:</label>
+        </th>
+        <td>
+            <input type="text" id="wpcf7-dolibarr-field-siren" name="wpcf7-dolibarr[field_siren]" class="wide" size="70" value="<?php echo $data['field_siren']; ?>">
+        </td>
+    </tr>
 	
 	<tr>
 		<th scope="row">

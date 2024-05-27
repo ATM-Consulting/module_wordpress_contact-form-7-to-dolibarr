@@ -42,7 +42,7 @@ class Wpcf7_dolibarr_sync
 			'headers' => ['DOLAPIKEY' => $datas['api_key']]
 		));
 
-		$this->setCompany($datas['field_company'], $datas['field_email']);
+		$this->setCompany($datas['field_company'], $datas['field_email'], $datas['field_siren']);
 		$this->setContact($datas['field_lastname'], $datas['field_firstname'], $datas['field_email'], $datas['field_phone']);
 		$this->setMessage($datas['message']);
 		$this->setMessageSubject($datas['subject']);
@@ -56,9 +56,10 @@ class Wpcf7_dolibarr_sync
 	 * @param string $email
 	 * @throws RestClientException
 	 */
-	private function setCompany($name, $email) {
+	private function setCompany($name, $email, $siren) {
 		$this->company['name'] = $name;
 		$this->company['email'] = $email;
+        $this->company['siren'] = $siren;
 		$this->company['provenance'] = 'INT';
 
 		// Retreive FR country : Only work with DOL_VERSION >= 7.0
@@ -134,8 +135,26 @@ class Wpcf7_dolibarr_sync
 		return $return;
 	}
 
-	public function searchContact($email) {
-		
+    /**
+     * Get a society ID with the user email
+     * @param string $email
+     * @return int < 0 if Ko, 0 if no one found, > 0 ID of the society of the found user
+     * @throws RestClientException
+     */
+	public function getSocietyIdFromContactEmail($email) {
+		$result = $this->api->get("contacts", ['sqlfilters' => "(t.email:LIKE:'".$email."')"]);
+        if ($result->info->http_code == 200) {
+            $resArray = $result->decode_response();
+            if (!empty($resArray[0])) {
+                return $resArray[0]->fk_soc;
+            }
+            return 0;
+        }
+
+        if ($result->info->http_code === 404) {
+            return 0;
+        }
+        return -1;
 	}
 
 	/**
@@ -147,8 +166,11 @@ class Wpcf7_dolibarr_sync
 		$datas = array(
 			'name' => $this->company['name'],
 			'email' => $this->company['email'],
-			'country_id' => $this->company['country_id'],
-			'array_options' => array('options_provenance' => $this->company['provenance'])
+            'idprof1' => $this->company['siren'],
+			'country_id' => !empty($this->company['siren']) ? 1 : $this->company['country_id'], // Force country to France if SIREN is set
+			'array_options' => array('options_provenance' => $this->company['provenance']),
+            'client'    => 2, // Set as Prospect,
+            'code_client' => 'auto'
 		);
 		$result = $this->api->post("thirdparties", $datas);
 
@@ -212,7 +234,9 @@ class Wpcf7_dolibarr_sync
 			'userownerid' => $this->ownerId,
 			'socid' => $this->company['id'],
 			'contactid' => $this->contact['id'],
-			'note' => $this->message
+			'socpeopleassigned' => [$this->contact['id'] => $this->contact['id']],
+			'note' => $this->message,
+            'percentage' => 100
 		);
 		$result = $this->api->post("agendaevents", $datas);
 
