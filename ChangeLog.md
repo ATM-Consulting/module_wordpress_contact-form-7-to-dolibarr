@@ -1,7 +1,7 @@
 # ChangeLog du module Wordpress Contact Form
 
 ## 4.4
-- New ajout d'un champ SIREN pour l'enregistrer sur le tiers créé + définir le pays à France si le siren est renseigné + définir le tiers comme prospect + créer l'évènement comme terminé + assignation de l'utilisateur créé dans l'évènement - 4.4.2 - *21/05/2024*
+- NEW :  ajout d'un champ SIREN pour l'enregistrement du tiers + définir le pays à France si le siren est renseigné + définir le tiers comme prospect + créer un événement "Entrant site web" - 4.4.2 - *21/05/2024*
 
 ## 1.0
 - FIX: API call dolibarr 17.0.2 compatibility - 1.0.1 - *02/06/2023*
